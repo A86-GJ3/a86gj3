@@ -1,0 +1,334 @@
+:root {
+  /* === 背景與面板 === */
+  --bg-color: #25252E;             /* 整體背景色（頁面底色） */
+  --panel-color: #27252d;          /* 主要面板區塊背景色 */
+  --group-color: #2a282f;          /* 主要面板區塊背景色 */
+
+  /* === Header 區塊 === */
+  --header-color: #36343e;         /* 一般 header（參數組、資料夾）背景色 */
+  --header-locked-color: #3b374f;  /* 鎖定狀態下的 header 背景色 */
+
+  /* === 文字顏色 === */
+  --text-color: #dadae1;           /* 主文字色（一般用於內容與按鈕） */
+  --text-subtle: #dbdbe0;          /* 次要文字色（例如標題、副標） */
+
+  /* === 按鈕樣式 === */
+  --btn-bg: #1b1924;               /* 按鈕背景色（正常狀態） */
+  --btn-hover: #272232;            /* 按鈕 hover 時的背景色 */
+
+  /* === 輸入欄樣式 === */
+  --input-bg: #1b1924;             /* 輸入欄背景色（數值欄、下拉選單） */
+  --input-border: #272232;         /* 輸入欄邊框色 */
+
+  /* === 滑桿與新增按鈕 === */
+  --add-btn-bg: #1b1924;           /* 新增參數、新增群組按鈕底色 */
+  --add-btn-hover: #272232;        /* 新增按鈕 hover 時的底色 */
+
+  /* === 禁用時的透明度 === */
+  --disabled-opacity: 0.4;         /* 被禁用元件的透明度 */
+}
+
+
+
+
+body {
+  font-family: sans-serif;
+  background: var(--bg-color);
+  padding: 1rem;
+  color: var(--text-color);
+}
+
+.app-block {
+  max-width: 960px;
+  margin: 2rem auto;
+  background: var(--panel-color);
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+}
+
+.group {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--group-color);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+
+
+.btn {
+  margin: 0 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border: none;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--btn-hover);
+}
+
+.folder-header,
+.group-header,
+.param-item {
+  display: flex;
+  align-items: center;
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  background: var(--header-color);
+  border-radius: 4px;
+}
+
+.group.locked .group-header {
+  background-color: var(--header-locked-color);
+}
+
+.param-item.locked,
+.param-item.parent-locked {
+  background-color: var(--header-locked-color);
+}
+
+.folder-title,
+.group-title {
+  flex: 1;
+  padding: 0 0.5rem;
+  color: var(--text-subtle);
+}
+
+.param-list,
+.group-list {
+  margin-left: 1rem;
+}
+
+/* 子自身鎖定邏輯 */
+.param-item.locked {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.param-item.locked .lock-btn,
+.param-item.locked .sort-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.param-item.locked .delete-btn,
+.param-item.locked .param-name,
+.param-item.locked .param-slider,
+.param-item.locked .param-value {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+/* 父層鎖定邏輯 */
+.param-item.parent-locked {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+.param-item.parent-locked .btn,
+.param-item.parent-locked .param-name,
+.param-item.parent-locked .param-slider,
+.param-item.parent-locked .param-value {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+/* group 鎖定本身不影響功能操作 */
+.group.locked {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.group.locked .group-title,
+.group.locked .apply-btn,
+.group.locked .sort-btn,
+.group.locked .lock-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.group.locked .delete-btn {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+/* 新增按鈕樣式 */
+button.add-group,
+button.add-param {
+  margin: 0.5rem 0;
+  padding: 4px 8px;
+  background: var(--add-btn-bg);
+  color: var(--text-color);
+  border-radius: 4px;
+}
+
+button.add-group:hover,
+button.add-param:hover {
+  background: var(--add-btn-hover);
+}
+
+/* 禁用狀態下無 hover 效果 */
+.param-item.locked .delete-btn:hover,
+.param-item.locked .param-name:hover,
+.param-item.locked .param-slider:hover,
+.param-item.locked .param-value:hover,
+.param-item.parent-locked .btn:hover,
+.param-item.parent-locked .param-name:hover,
+.param-item.parent-locked .param-slider:hover,
+.param-item.parent-locked .param-value:hover,
+.group.locked .delete-btn:hover {
+  background: var(--btn-bg);
+  cursor: default;
+  box-shadow: none;
+}
+
+/* 滑桿樣式 */
+input[type="range"] {
+  margin: 0 0.5rem;
+  flex: 1;
+  background: var(--btn-bg);
+  accent-color: var(--btn-hover);
+}
+
+/* 數值輸入框 */
+input[type="number"] {
+  width: 60px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  padding: 2px 4px;
+}
+
+/* 數值輸入框的上下按鈕箭頭 */
+input[type="number"]::-webkit-inner-spin-button {
+  background: var(--btn-bg);
+  color: var(--text-color);
+  border-radius: 2px;
+}
+input[type="number"]::-webkit-outer-spin-button {
+  background: var(--btn-bg);
+  color: var(--text-color);
+}
+
+/* 下拉選單 */
+select.param-name {
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--input-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 24px;
+  width: fit-content;
+  min-width: 240px;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23FFD7E1' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 12px;
+}
+
+
+/* 外部 hover 效果 */
+select.param-name:hover {
+  background-color: var(--btn-hover);
+}
+
+/* option 選項 hover 效果（需依平台支援） */
+select.param-name option {
+  background: var(--panel-color);
+  color: var(--text-color);
+}
+
+select.param-name option:hover {
+  background: var(--btn-hover);
+  color: var(--text-color);
+}
+
+/* ... 原有樣式略 ... */
+
+.folder.locked .folder-header {
+  background-color: var(--header-locked-color);
+}
+
+.folder.locked {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.folder.locked .folder-title,
+.folder.locked .sort-btn {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+.folder.locked .delete-btn {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+.folder.locked .lock-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+.toggle-btn::after {
+  content: '';
+}
+
+.collapsed .toggle-btn::after {
+  transform: rotate(-90deg);
+}
+
+.collapse-all-folders {
+  margin-bottom: 1rem;
+}
+
+/* 隱藏 group 內容時 */
+.group.collapsed .param-list {
+  display: none;
+}
+
+/* 隱藏 group 列時，新增按鈕也可以跟著隱藏（可選） */
+.group.collapsed .add-param {
+  display: none;
+}
+
+
+.toolbar .btn {
+  padding: 6px 16px;
+  height: 40px; /* 統一高度 */
+  display: flex;
+  align-items: center; /* 垂直置中 */
+  justify-content: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+
+
+
+
+.group.collapsed .param-list,
+.folder.collapsed .group-list {
+  display: none;
+}
+
+.toggle-btn {
+  font-weight: bold;
+  padding: 2px 6px;
+  background: var(--btn-bg);
+  color: var(--text-color);
+  transition: transform 0.2s ease;
+}
+
+/* 摺疊資料夾時，隱藏新增參數組按鈕 */
+.folder.collapsed .add-group {
+  display: none;
+}
