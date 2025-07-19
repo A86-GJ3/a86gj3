@@ -14,8 +14,8 @@
       Address:
       <input type="text" id="server" value="ws://localhost:22033" />
       <br>
-      <button type="button" class="custom-button-connection" onclick="connect()">Connect</button>
-      <button type="button" class="custom-button-connection" onclick="disconnect()">Disconnect</button>
+      <button type="button" class="custom-button-connection" onclick="connect()">連接Live2D</button>
+      <button type="button" class="custom-button-connection" onclick="disconnect()">斷開連接</button>
       <br>
       State:
       <label id="state">Disconnected</label>
@@ -27,7 +27,12 @@
   <div class="toolbar">
     <button id="collapseAllBtn" class="btn collapse-all-folders">摺疊 / 展開所有資料夾</button>
     <button id="addFolderBtn" class="btn add-folder">新增資料夾</button>
-    
+    <button id="exportBtn" class="btn">匯出設定</button>
+  <button id="importBtn" class="btn">載入設定</button>
+  <button id="resetBtn" class="btn">清除設定</button>
+
+  <input type="file" id="importFileInput" accept=".json" hidden />
+
   </div>
   <div id="app"></div>
 

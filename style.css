@@ -311,6 +311,13 @@ select.param-name option:hover {
   white-space: nowrap;
 }
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;            /* 如果太擠可以自動換行 */
+  gap: 8px;                   /* 按鈕間距 */
+  margin-bottom: 1rem;
+  align-items: center;
+}
 
 
 

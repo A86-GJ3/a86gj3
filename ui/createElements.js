@@ -9,8 +9,8 @@ export function createParamItem() {
     <button class="btn sort-down-btn">${BUTTON_LABELS.sortDown}</button>
     <button class="btn lock-btn">${BUTTON_LABELS.lock}</button>
     <select class="param-name">
-      <option>HandOpen</option>
-      <option>FingerCurl</option>
+      <option>Test01</option>
+      <option>Test02</option>
     </select>
     <input type="range" class="param-slider" min="0" max="1" step="0.01" value="1">
     <input type="number" class="param-value" min="0" max="1" step="0.01" value="1">
