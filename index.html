@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>參數控制介面</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="connection">
+    <div>
+      Address:
+      <input type="text" id="server" value="ws://localhost:22033" />
+      <br>
+      <button type="button" class="custom-button-connection" onclick="connect()">Connect</button>
+      <button type="button" class="custom-button-connection" onclick="disconnect()">Disconnect</button>
+      <br>
+      State:
+      <label id="state">Disconnected</label>
+      <br><br>
+      Connection Error Log<br>
+      <textarea id="textarea_errorLog" class="output-textarea-errorLog"></textarea>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button id="collapseAllBtn" class="btn collapse-all-folders">摺疊 / 展開所有資料夾</button>
+    <button id="addFolderBtn" class="btn add-folder">新增資料夾</button>
+    
+  </div>
+  <div id="app"></div>
+
+  <script src="CEPlugin.js"></script>
+  <script src="script.js"></script>
+
+  <!-- 模組入口 -->
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
