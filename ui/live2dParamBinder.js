@@ -16,17 +16,18 @@ export async function updateParamSelectOptions(selectElem) {
     const paramRes = await cePlugin.sendMessage("GetParameters", { ModelUID: modelUID });
     const paramList = paramRes.Data.Parameters;
 
-    const previousValue = selectElem.value;
     selectElem.innerHTML = "";
 
     // 取得同一組內，其他 param-item 已選的 Id
     const group = selectElem.closest(".group");
     const usedIds = new Set();
 
+    const previousValue = selectElem.getAttribute("data-prev-id") || selectElem.value;
+
     group.querySelectorAll(".param-item .param-name").forEach(otherSelect => {
-      if (otherSelect !== selectElem) {
-        const id = otherSelect.value;
-        if (id) usedIds.add(id);
+      const id = otherSelect.value;
+      if (id && otherSelect !== selectElem && id !== previousValue) {
+        usedIds.add(id);
       }
     });
 
@@ -131,3 +132,4 @@ async function updateSliderFromParameter(selectElem, modelUID, paramId) {
     console.error("更新滑桿失敗：", err);
   }
 }
+export { updateSliderFromParameter };

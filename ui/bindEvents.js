@@ -150,9 +150,14 @@ export function bindFolderEvents(folder) {
 };
 
 
-  delBtn.onclick = () => {
-    if (confirm("確定要刪除這個組資料夾？")) folder.remove();
-  };
+delBtn.onclick = () => {
+  if (confirm("確定要刪除這個組資料夾？")) {
+    const appBlock = folder.closest(".app-block");
+    if (appBlock) appBlock.remove();
+    else folder.remove(); // fallback
+  }
+};
+
 
   folder.querySelector(".sort-up-btn")?.addEventListener("click", () => moveUp(folder, ".folder"));
   folder.querySelector(".sort-down-btn")?.addEventListener("click", () => moveDown(folder, ".folder"));
