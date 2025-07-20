@@ -9,6 +9,9 @@ export function moveUp(element, selector) {
   const prev = element.previousElementSibling;
   if (prev?.matches(selector)) {
     element.parentNode.insertBefore(element, prev);
+    console.log("🔼 moved up:", element);
+  } else {
+    console.log("🚫 cannot move up");
   }
 }
 
@@ -16,8 +19,12 @@ export function moveDown(element, selector) {
   const next = element.nextElementSibling;
   if (next?.matches(selector)) {
     element.parentNode.insertBefore(next, element);
+    console.log("🔽 moved down:", element);
+  } else {
+    console.log("🚫 cannot move down");
   }
 }
+
 
 export function updateParamLockVisuals(group) {
   const locked = group.classList.contains("locked");

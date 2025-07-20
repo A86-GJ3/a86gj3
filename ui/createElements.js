@@ -1,5 +1,20 @@
 import { BUTTON_LABELS } from './buttonLabels.js';
-import { bindParamEvents, bindGroupEvents, bindAllAddButtons } from './bindEvents.js';
+import { bindParamEvents, bindGroupEvents, bindAllAddButtons,bindFolderEvents } from './bindEvents.js';
+import { moveUp, moveDown } from './helpers.js'; // 放在檔案頂部
+
+export function createAppBlockWithFolder() {
+  const appBlock = document.createElement("div");
+  appBlock.className = "app-block";
+
+  const folder = createFolder();
+  appBlock.appendChild(folder);
+
+  // 綁定事件
+  bindFolderEvents(folder);
+  bindAllAddButtons(folder);
+
+  return appBlock;
+}
 
 export function createParamItem() {
   const div = document.createElement("div");
@@ -19,16 +34,34 @@ export function createParamItem() {
   return div;
 }
 
-export function createParamGroup() {
+export function createParamGroup(parentFolder = null) {
   const div = document.createElement("div");
   div.className = "group";
 
-  // 檢查是否要初始為摺疊狀態
-  const parentFolder = document.querySelector(".folder:last-child");
+  // 如果未指定父層資料夾，就取最近的 group-list 往上找 .folder
+  if (!parentFolder) {
+    const groupList = document.querySelector(".group-list:last-child");
+    if (groupList) {
+      parentFolder = groupList.closest(".folder");
+    }
+  }
+
+  // 預設為展開，除非父層資料夾中所有 group 都是 collapsed
+  let groupName = `${BUTTON_LABELS.newGroup}`;
   if (parentFolder) {
     const existingGroups = parentFolder.querySelectorAll(".group");
-    const allCollapsed = [...existingGroups].length > 0 && [...existingGroups].every(g => g.classList.contains("collapsed"));
+    const allCollapsed = existingGroups.length > 0 && [...existingGroups].every(g => g.classList.contains("collapsed"));
     if (allCollapsed) div.classList.add("collapsed");
+
+    const groupIndex = existingGroups.length + 1;
+    const paddedNumber = String(groupIndex).padStart(2, '0');
+    groupName = `${BUTTON_LABELS.newGroup} (${paddedNumber})`;
+  } else {
+    // 如果真的找不到父層（極端 fallback）
+    console.warn("⚠️ createParamGroup: 無法判定父層資料夾，將使用全域 fallback 編號。");
+    const index = document.querySelectorAll(".group").length + 1;
+    const paddedNumber = String(index).padStart(2, '0');
+    groupName = `${BUTTON_LABELS.newGroup} (${paddedNumber})`;
   }
 
   div.innerHTML = `
@@ -38,7 +71,9 @@ export function createParamGroup() {
       <button class="btn sort-down-btn">${BUTTON_LABELS.sortDown}</button>
       <button class="btn lock-btn">${BUTTON_LABELS.lock}</button>
       <button class="btn apply-btn">${BUTTON_LABELS.apply}</button>
-      <span class="group-title" contenteditable="true">新參數組</span>
+      <span class="group-title" contenteditable="true">${groupName}</span>
+      <button class="btn duplicate-group-btn">${BUTTON_LABELS.duplicateGroup}</button>
+      <button class="btn auto-create-group-btn">${BUTTON_LABELS.autoCreate}</button>
       <button class="btn delete-btn">${BUTTON_LABELS.delete}</button>
     </div>
     <div class="param-list"></div>
@@ -54,17 +89,24 @@ export function createParamGroup() {
   paramList.appendChild(addBtn);
 
   bindParamEvents(item);
+
   return div;
 }
+
+
+
 
 export function createFolder() {
   const folder = document.createElement("div");
   folder.className = "folder";
 
-  // 若目前所有資料夾都摺疊，則這個新建資料夾也預設摺疊
   const allFolders = document.querySelectorAll(".folder");
-  const allCollapsed = [...allFolders].length > 0 && [...allFolders].every(f => f.classList.contains("collapsed"));
+  const allCollapsed = allFolders.length > 0 && [...allFolders].every(f => f.classList.contains("collapsed"));
   if (allCollapsed) folder.classList.add("collapsed");
+
+  const index = allFolders.length + 1;
+  const paddedNumber = String(index).padStart(2, '0');
+  const folderName = `${BUTTON_LABELS.newFolder} (${paddedNumber})`;
 
   folder.innerHTML = `
     <div class="folder-header">
@@ -72,7 +114,7 @@ export function createFolder() {
       <button class="btn collapse-groups-btn">摺疊組</button>
       <button class="btn sort-up-btn">${BUTTON_LABELS.sortUp}</button>
       <button class="btn sort-down-btn">${BUTTON_LABELS.sortDown}</button>
-      <span class="folder-title" contenteditable="true">新資料夾</span>
+      <span class="folder-title" contenteditable="true">${folderName}</span>
       <button class="btn delete-btn">${BUTTON_LABELS.delete}</button>
     </div>
     <div class="group-list"></div>
@@ -80,7 +122,9 @@ export function createFolder() {
   `;
 
   const groupList = folder.querySelector(".group-list");
-  const group = createParamGroup();
+
+  // ✅ 傳入 parentFolder，讓編號正確從1開始
+  const group = createParamGroup(folder);
   groupList.appendChild(group);
 
   bindGroupEvents(group);
@@ -88,3 +132,8 @@ export function createFolder() {
 
   return folder;
 }
+
+
+
+
+
