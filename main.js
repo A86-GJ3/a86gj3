@@ -1,6 +1,6 @@
 // === main.js ===
 import { BUTTON_LABELS } from './ui/buttonLabels.js';
-import { createFolder } from './ui/createElements.js';
+import { createFolder,createAppBlockWithFolder  } from './ui/createElements.js';
 import { bindFolderEvents, bindAllAddButtons } from './ui/bindEvents.js';
 import './ui/live2dParamBinder.js';
 import { setCollapseState } from './ui/helpers.js';
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const importFileInput = document.getElementById("importFileInput");
   const app = document.getElementById("app");
   const resetBtn = document.getElementById("resetBtn");
+  const container = document.getElementById("container");
 
 waitForPluginConnected().then(async () => {
   const restored = await tryLoadAutoSavedState();
@@ -44,26 +45,19 @@ waitForPluginConnected().then(async () => {
   };
 
   // ✅ 新增資料夾
-  addFolderButton.onclick = () => {
-    const appBlock = document.createElement("div");
-    appBlock.className = "app-block";
+addFolderButton.onclick = () => {
+  // ✅ 檢查是否已連線，未連線則提示
+  if (window.cePlugin?.state !== 3) {
+    const proceed = confirm("尚未連上 Cubism Editor，確定仍要新增資料夾嗎？\n新增的話，自動保存的網頁資料將會消失。");
+    if (!proceed) return;
+  }
 
-    const folder = createFolder();
+  const appBlock = createAppBlockWithFolder();
+  app.appendChild(appBlock);
+  autoSaveState();
+};
 
-    const allFolders = document.querySelectorAll(".folder");
-    const shouldBeCollapsed = allFolders.length > 0 && [...allFolders].every(f => f.classList.contains("collapsed"));
-    if (shouldBeCollapsed) {
-      folder.classList.add("collapsed");
-    }
 
-    appBlock.appendChild(folder);
-    app.appendChild(appBlock);
-
-    bindFolderEvents(folder);
-    bindAllAddButtons(folder);
-
-    autoSaveState();
-  };
 
   // ✅ 匯出 JSON
   exportBtn.onclick = exportStateToJSON;

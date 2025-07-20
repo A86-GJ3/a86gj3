@@ -40,20 +40,21 @@ body {
 
 .app-block {
   max-width: 960px;
-  margin: 2rem auto;
+  margin: 1rem auto;
+  padding: 0.25rem 0.5rem;    /* 控制內部物件與框框邊緣的距離 */
   background: var(--panel-color);
   border-radius: 6px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-  padding: 1rem;
 }
 
 .group {
-  margin: 1rem 0;
-  padding: 1rem;
+  margin: 0.5rem 0;   /* 控制參數組之間的距離 */
+  padding: 0.25rem 0.5rem;    /* 控制內部物件與框框邊緣的距離 */
   border-radius: 6px;
   background: var(--group-color);
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
+
 
 
 .btn {
@@ -338,4 +339,14 @@ select.param-name option:hover {
 /* 摺疊資料夾時，隱藏新增參數組按鈕 */
 .folder.collapsed .add-group {
   display: none;
+}
+.group.locked .auto-create-group-btn {
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+
+.group.locked .auto-create-group-btn:hover {
+  background: var(--btn-bg);
+  cursor: default;
+  box-shadow: none;
 }

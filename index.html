@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>參數控制介面</title>
+  <title>Live2D 參數組儲存</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,21 +12,18 @@
   <div id="connection">
     <div>
       Address:
-      <input type="text" id="server" value="ws://localhost:22033" />
-      <br>
-      <button type="button" class="custom-button-connection" onclick="connect()">連接Live2D</button>
-      <button type="button" class="custom-button-connection" onclick="disconnect()">斷開連接</button>
+      <input class="btn" type="text" id="server" value="ws://localhost:22033" />
+      <button type="button" class="custom-button-connection btn" onclick="connect()">連接Live2D</button>
+      <button type="button" class="custom-button-connection btn" onclick="disconnect()">斷開連接</button>
       <br>
       State:
       <label id="state">Disconnected</label>
-      <br><br>
-      Connection Error Log<br>
-      <textarea id="textarea_errorLog" class="output-textarea-errorLog"></textarea>
+      <textarea id="textarea_errorLog" class="output-textarea-errorLog btn"></textarea>
     </div>
   </div>
   <div class="toolbar">
-    <button id="collapseAllBtn" class="btn collapse-all-folders">摺疊 / 展開所有資料夾</button>
-    <button id="addFolderBtn" class="btn add-folder">新增資料夾</button>
+    <button id="collapseAllBtn" class="btn">摺疊 / 展開所有資料夾</button>
+    <button id="addFolderBtn" class="btn">新增資料夾</button>
     <button id="exportBtn" class="btn">匯出設定</button>
   <button id="importBtn" class="btn">載入設定</button>
   <button id="resetBtn" class="btn">清除設定</button>
